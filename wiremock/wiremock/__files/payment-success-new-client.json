@@ -1,0 +1,9 @@
+{
+  "id": "10h100-120f-5000-8021-gf100000e",
+  "paid": true,
+  "clientId": "101",
+  "amount": {
+    "value": "500.00",
+    "currency": "RUB"
+  }
+}

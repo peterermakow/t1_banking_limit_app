@@ -1,0 +1,1 @@
+INSERT INTO limits(client_id) VALUES (GENERATE_SERIES(1,100));

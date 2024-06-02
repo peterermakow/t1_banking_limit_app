@@ -1,0 +1,96 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method" : "POST",
+        "urlPathPattern" : "/payments",
+        "bodyPatterns": [{
+          "equalToJson": {
+            "id": "23d547-000f-5000-8000-te369rt00g",
+            "clientId": "1",
+            "amount": {
+              "value": "1000.00",
+              "currency": "RUB"
+            }
+          }
+        }]
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName" : "payment-success.json",
+        "headers": {
+          "Content-Type" : "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/payments",
+        "bodyPatterns": [{
+          "equalToJson": {
+            "id": "23d547-100f-5000-8020-te369rt00g",
+            "clientId": "2",
+            "amount": {
+              "value": "5000.00",
+              "currency": "RUB"
+            }
+          }
+        }]
+      },
+      "response": {
+        "status": 400,
+        "bodyFileName": "payment-denied.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/payments",
+        "bodyPatterns": [{
+          "equalToJson": {
+            "id": "10h100-120f-5000-8021-gf100000e",
+            "clientId": "101",
+            "amount": {
+              "value": "500.00",
+              "currency": "RUB"
+            }
+          }
+        }]
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "payment-success-new-client.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/payments",
+        "bodyPatterns": [{
+          "equalToJson": {
+            "id": "10h101-123f-7000-8021-gf100000e",
+            "clientId": "102",
+            "amount": {
+              "value": "300.00",
+              "currency": "RUB"
+            }
+          }
+        }]
+      },
+      "response": {
+        "status": 400,
+        "bodyFileName": "payment-denied-new-client.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}
