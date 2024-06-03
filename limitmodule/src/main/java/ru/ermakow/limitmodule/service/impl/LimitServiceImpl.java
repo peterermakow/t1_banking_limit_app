@@ -12,7 +12,6 @@ import ru.ermakow.limitmodule.exception.LimitExceedingException;
 import ru.ermakow.limitmodule.repository.CustomLimitRepository;
 import ru.ermakow.limitmodule.repository.LimitRepository;
 import ru.ermakow.limitmodule.service.LimitService;
-import ru.ermakow.utils.WebResponseBuilder;
 
 import java.math.BigDecimal;
 
@@ -25,7 +24,7 @@ public class LimitServiceImpl implements LimitService {
     private final LimitRepository limitRepository;
     private final CustomLimitRepository customLimitRepository;
 
-    @Transactional
+    @Transactional(noRollbackFor = RuntimeException.class)
     public ResponseEntity<WebResponseDto> process(PaymentRequest paymentRequest) {
 
         Long clientId = Long.valueOf(paymentRequest.clientId());
@@ -40,6 +39,7 @@ public class LimitServiceImpl implements LimitService {
         var response = restTemplate.postForEntity("/payments", paymentRequest, PaymentStatusResponse.class);
         entity.setDayLimit(entity.getDayLimit().subtract(payment));
         limitRepository.save(entity);
-        return ResponseEntity.ok(WebResponseBuilder.createSuccessDto(response.getBody()));
+        return ResponseEntity.ok(WebResponseDto.builder().success(true).response(response.getBody()).build());
     }
+
 }

@@ -20,7 +20,3 @@ integrations:
         url: "http://localhost:8031"
         connect_timeout: 1s
         read_timeout: 5s
-
-limits:
-  properties:
-    limit: 10000.00

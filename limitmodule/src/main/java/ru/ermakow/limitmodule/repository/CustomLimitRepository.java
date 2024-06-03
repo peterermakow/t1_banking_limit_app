@@ -1,7 +1,6 @@
 package ru.ermakow.limitmodule.repository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -32,7 +31,7 @@ public class CustomLimitRepository {
     private static final String UPDATE_DAY_LIMIT_QUERY = "UPDATE limits SET day_limit = DEFAULT";
 
     @Scheduled(cron = "0 0 0 * * *")
-    public void resetDayLimits() {
+    public void resetDayLimitsAtMidnight() {
         Map<String, Object> params = Map.of(DEFAULT_DAY_LIMIT, new Object());
         jdbcOperations.update(UPDATE_DAY_LIMIT_QUERY, params);
     }
@@ -43,5 +42,4 @@ public class CustomLimitRepository {
         BeanPropertyRowMapper<LimitEntity> rowMapper = BeanPropertyRowMapper.newInstance(LimitEntity.class);
         return jdbcOperations.queryForObject(SAVE_AND_RETURN_SQL_QUERY, params, rowMapper);
     }
-
 }
