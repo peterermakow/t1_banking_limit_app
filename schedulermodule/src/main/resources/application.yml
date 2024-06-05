@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: schedulermodule
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/limit_db
+
+scheduler:
+  cron-expression: '0 0 0 * * *'
+
+server:
+  port: 8081

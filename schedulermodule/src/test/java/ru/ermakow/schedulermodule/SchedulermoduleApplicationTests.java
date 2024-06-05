@@ -1,10 +1,10 @@
-package ru.ermakow.limitmodule;
+package ru.ermakow.schedulermodule;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LimitmoduleApplicationTests {
+class SchedulermoduleApplicationTests {
 
     @Test
     void contextLoads() {
