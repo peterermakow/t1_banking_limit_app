@@ -1,10 +1,12 @@
 package ru.ermakow.limitmodule.service;
 
 import org.springframework.http.ResponseEntity;
-import ru.ermakow.dto.request.PaymentRequest;
-import ru.ermakow.dto.response.WebResponseDto;
+import ru.ermakow.dto.request.LimitRequest;
+import ru.ermakow.dto.response.LimitResponse;
 
 public interface LimitService {
 
-    ResponseEntity<WebResponseDto> process(PaymentRequest paymentRequest);
+    ResponseEntity<LimitResponse> decreaseLimit(LimitRequest request);
+
+    ResponseEntity<LimitResponse> increaseLimit(LimitRequest request);
 }

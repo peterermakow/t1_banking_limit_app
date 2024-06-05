@@ -4,13 +4,15 @@ package ru.ermakow.limitmodule.api;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import ru.ermakow.dto.request.PaymentRequest;
-import ru.ermakow.dto.response.WebResponseDto;
+import ru.ermakow.dto.request.LimitRequest;
+import ru.ermakow.dto.response.LimitResponse;
+import ru.ermakow.limitmodule.api.utils.UriConstants;
 
-@RequestMapping("/limit")
 public interface LimitApi {
 
-    @PostMapping
-    ResponseEntity<WebResponseDto> processLimitCheck(@RequestBody PaymentRequest paymentRequest);
+    @PostMapping(UriConstants.DECREASE_LIMIT)
+    ResponseEntity<LimitResponse> decreaseLimit(@RequestBody LimitRequest request);
+
+    @PostMapping(UriConstants.INCREASE_LIMIT)
+    ResponseEntity<LimitResponse> increaseLimit(@RequestBody LimitRequest request);
 }

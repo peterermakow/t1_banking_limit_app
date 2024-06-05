@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import ru.ermakow.dto.request.PaymentRequest;
-import ru.ermakow.dto.response.PaymentStatusResponse;
-import ru.ermakow.dto.response.WebResponseDto;
+import ru.ermakow.dto.request.LimitRequest;
+import ru.ermakow.dto.response.LimitResponse;
 import ru.ermakow.limitmodule.exception.LimitExceedingException;
 import ru.ermakow.limitmodule.repository.CustomLimitRepository;
 import ru.ermakow.limitmodule.repository.LimitRepository;
@@ -20,26 +18,37 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class LimitServiceImpl implements LimitService {
 
-    private final RestTemplate restTemplate;
     private final LimitRepository limitRepository;
     private final CustomLimitRepository customLimitRepository;
 
-    @Transactional(noRollbackFor = RuntimeException.class)
-    public ResponseEntity<WebResponseDto> process(PaymentRequest paymentRequest) {
-
-        Long clientId = Long.valueOf(paymentRequest.clientId());
-        BigDecimal payment = new BigDecimal(paymentRequest.amount().value());
+    @Transactional
+    @Override
+    public ResponseEntity<LimitResponse> decreaseLimit(LimitRequest request) {
+        Long clientId = Long.valueOf(request.clientId());
+        BigDecimal value = new BigDecimal(request.amount().value());
         var entity = limitRepository.findByClientId(clientId)
                 .orElseGet(() -> customLimitRepository.saveAndReturn(clientId));
 
-        if (entity.getDayLimit().compareTo(payment) < 0) {
-            throw new LimitExceedingException("Превышен ежедневный лимит операций по продукту");
+        if (entity.getDayLimit().compareTo(value) < 0) {
+            throw new LimitExceedingException(String.format("Превышен ежедневный лимит операций по продукту для клиента с ID %d", clientId));
         }
 
-        var response = restTemplate.postForEntity("/payments", paymentRequest, PaymentStatusResponse.class);
-        entity.setDayLimit(entity.getDayLimit().subtract(payment));
+        entity.setDayLimit(entity.getDayLimit().subtract(value));
         limitRepository.save(entity);
-        return ResponseEntity.ok(WebResponseDto.builder().success(true).response(response.getBody()).build());
+        return ResponseEntity.ok(new LimitResponse(String.format("Клиенту с ID %d уменьшен суточный лимит на %s %s", clientId, value, request.amount().currency())));
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<LimitResponse> increaseLimit(LimitRequest request) {
+        Long clientId = Long.valueOf(request.clientId());
+        BigDecimal value = new BigDecimal(request.amount().value());
+        var entity = limitRepository.findByClientId(clientId)
+                .orElseGet(() -> customLimitRepository.saveAndReturn(clientId));
+
+        entity.setDayLimit(entity.getDayLimit().add(value));
+        limitRepository.save(entity);
+        return ResponseEntity.ok(new LimitResponse(String.format("Клиенту с ID %d восстановлен суточный лимит на %s %s", clientId, value, request.amount().currency())));
     }
 
 }

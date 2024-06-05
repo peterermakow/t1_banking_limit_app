@@ -12,11 +12,3 @@ spring:
     show-sql: true
     open-in-view: false
     generate-ddl: false
-
-integrations:
-  payments:
-    client:
-      rest-template-properties:
-        url: "http://localhost:8031"
-        connect_timeout: 1s
-        read_timeout: 5s
